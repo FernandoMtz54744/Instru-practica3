@@ -7,32 +7,29 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
- *
+ * @author Vazquez Perez Denzel
  * @author Fernando Mtz
+ * @author Luis Fernando
  */
 public class Animacion extends JFrame implements ActionListener{
     JLabel back, motor;
     int alturaAgua = 20;
     int temperatura = 0;
+    String msj = "";
+    
     public Animacion(){
         //Configurando ventana
         setBounds(20, 20, 1200, 800);
         setLayout(null);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-       
-        /*
-        ImageIcon backgroundMotor = new ImageIcon("src/img/motor.png");
-        Image imgMotor = backgroundMotor.getImage();
-        Image tempMotor = imgMotor.getScaledInstance(100,100,Image.SCALE_SMOOTH);
-        backgroundMotor = new ImageIcon(tempMotor);
-        motor = new JLabel(backgroundMotor);
-        motor.setBounds(400, 500, 100, 100);
-        add(motor);*/
         
         //Configurando fondo
         ImageIcon background = new ImageIcon("src/img/tinacoAguaSol.jpg");
@@ -49,6 +46,21 @@ public class Animacion extends JFrame implements ActionListener{
         add(prueba);
         
         setVisible(true);
+        
+        //Se inicia la conexion
+        Serial serial = new Serial();
+        serial.connect();
+        
+        //Se lee el mensaje cada 3 segundos
+        Runnable listen = new Runnable() {
+             public void run() {
+                    System.out.println(serial.getMsj());
+            }
+        };
+        
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(listen, 0, 3, TimeUnit.SECONDS);
+        
     }
 
     @Override
