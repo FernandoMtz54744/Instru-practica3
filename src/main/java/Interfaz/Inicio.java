@@ -56,7 +56,7 @@ public class Inicio extends JFrame implements  ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Animacion animacion = new Animacion();
+        Animation animacion = new Animation();
         dispose();
     }
 }
